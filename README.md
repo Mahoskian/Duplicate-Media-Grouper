@@ -65,16 +65,16 @@ This tool scans an `input/` directory, computes perceptual hashes for images or 
 
 ## Installation
 
-1. **Create a Virtual Environment:**
+1. ### Create a Virtual Environment:
    `python3.11 -m venv venv`
 
-3. **Enter the Virtual Enviroment:**
+3. ### Enter the Virtual Enviroment:
    `source venv/bin/activate   # Linux/macOS`
 
-5. **Install Dependencies:**
+5. ### Install Dependencies:
    `pip install -r requirements.txt`
 
-7. **Make the launcher executable (Linux/macOS only):**
+7. ### Make the launcher executable (Linux/macOS only):
    `chmod +x run.sh`
 
 ---
