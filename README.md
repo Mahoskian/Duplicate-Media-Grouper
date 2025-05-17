@@ -99,12 +99,12 @@ Each configuration option balances speed, accuracy, and perceptual sensitivity. 
       * **Strict (0–2%)** → catches exact duplicates or near-identical encodes
       * **Moderate (3–7%)** → captures edited versions, recuts, color/brightness changes
       * **Loose (8–12%+)** → ideal for vibe grouping — same setting, outfit, or aesthetic
-      * > Think of this as a vibe sensitivity dial — turn it up to group by feel, down to group by pixel-level sameness
-        
-To estimate the percentage:
-\[
-\text{Similarity %} = \frac{SIMILARITY\_THRESHOLD}{HASH\_SIZE^2} \times 100
-\]
+    * **Similarity % ≈ (SIMILARITY_THRESHOLD / HASH_SIZE²) × 100**
+      * Example:
+        - `HASH_SIZE = 32` → 32² = 1024 bits
+        - `SIMILARITY_THRESHOLD = 75`
+        - `75 / 1024 × 100 ≈ 7.3%`
+      > Think of this as a vibe sensitivity dial — turn it up to group by feel, down to group by pixel-level sameness
 ---
 
 ## Installation
