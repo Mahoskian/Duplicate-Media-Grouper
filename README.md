@@ -69,7 +69,7 @@ Each variant follows the same interface and workflow—choose the one that best 
 Each configuration option balances speed, accuracy, and perceptual sensitivity. Adjust these based on whether you're targeting exact duplicates, light edits, or vibe-level similarity.
 
 ### MAX\_WORKERS
- * **What it does:** Number of parallel processes used for hashing `default: multiprocessing.cpu_count() - 2`
+ * **What it does:** Number of parallel processes used for hashing `default: cpu_count() - 2`
  * **Impact:**
     * More workers = faster runtime (up to your core limit)
     * Too many workers on low-memory systems may trigger swapping or slowdowns
