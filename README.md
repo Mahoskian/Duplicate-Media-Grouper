@@ -26,6 +26,7 @@ Each variant follows the same interface and workflow—choose the one that best 
 This tool scans an `input/` directory, computes perceptual hashes for images or video frames, groups similar files by Hamming distance, and moves each group into its own folder under `output/`.
 
 > **Note:** On each script run, any files previously grouped in `output/` will be moved back into `input/` to prevent accidental data loss and ensure a consistent reprocessing loop.
+
 > **OS Compatibility:** This repo is currently configured for Linux. It can also run on macOS or Windows, but may require additional setup by the user.
 
 ---
