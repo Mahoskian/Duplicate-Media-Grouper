@@ -109,14 +109,12 @@ Use the `run.sh` launcher to run any of the three hashing scripts or reset the w
 
 ### Examples
 
-#### Run pHash on images using 4 workers and a stricter threshold
-./run.sh phash image M_WORKERS=4 S_THRESH=8
-
-#### Sample 30 frames for video dHash, no actual moves (dry run)
-./run.sh dhash video S_FRAMES=30 D_RUN=true
-
-#### Reset workspace
-./run.sh reset
+* #### Run pHash on images using 4 workers and a stricter threshold
+  ./run.sh phash image M_WORKERS=4 S_THRESH=8
+* #### Sample 30 frames for video dHash, no actual moves (dry run)
+  ./run.sh dhash video S_FRAMES=30 D_RUN=true
+* #### Reset workspace
+  ./run.sh reset
 
 ---
 
