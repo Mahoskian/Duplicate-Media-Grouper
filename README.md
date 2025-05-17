@@ -21,7 +21,7 @@ Each variant follows the same interface and workflow—choose the one that best 
 3. [Configuration](#configuration-highlights)
 4. [Installation](#installation)
 5. [Usage](#usage)
-6. [Next Steps](#license)
+6. [Project Dev](#project-dev)
 7. [License](#license)
 
 ---
@@ -173,9 +173,9 @@ Use the `run.sh` launcher to run any of the three hashing scripts or reset the w
 
 ---
 
-## Next Steps
+## Project Dev
 
-Planned Project Dev Steps. See [nextsteps]()
+See [ProjectDev](project-dev.md)
 
 ---
 
