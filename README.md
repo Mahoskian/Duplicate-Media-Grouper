@@ -68,43 +68,50 @@ Each variant follows the same interface and workflow—choose the one that best 
 
 Each configuration option balances speed, accuracy, and perceptual sensitivity. Adjust these based on whether you're targeting exact duplicates, light edits, or vibe-level similarity.
 
-* **MAX\_WORKERS**
-   * **What it does:** Number of parallel processes used for hashing (default: up to 10 or CPU core count).
-   * **Impact:**
-      * More workers = faster runtime (up to your core limit)
-      * Too many workers on low-memory systems may trigger swapping or slowdowns
-      * More workers may result in missing cross-batch similarities
-* **CHUNK\_COEF**:
-   * **What it does:** Controls the number of files each worker gets (i.e. chunk size).
-   * **Computed as:** `chunk_size = total_files // (MAX_WORKERS * CHUNK_COEF)`
-   * **Impact:**
-      * Lower value (e.g. 1–2) → larger batches → better global comparison but higher memory usage
-      * Higher value (e.g. 4–10) → smaller batches → lower memory and faster per-batch processing, but may miss cross-batch similarities
-* **MODE**: `image` or `video`.
-   * Impact: (image) Computes a single hash per file (video) Extracts multiple frames per video and hashes them (slower, but much more accurate) 
-* **FRAMES\_TO\_SAMPLE**:
-   * **What it does:** Number of frames to extract and hash per video file
-   * **Impact:**
-      * Higher values (e.g. 60–90) = better coverage across time → better vibe detection, scene-level similarity
-      * Lower values (e.g. 10–20) = faster, less precise
-      * > For highly dynamic or longer videos, increase this to avoid missing variations
-* **HASH\_SIZE**:
-   * **What it does:** Size of the perceptual hash matrix (e.g. 8×8, 16×16, 32×32)
-      * **Impact:**
-         * Larger hash (e.g. 32) = more detail, higher grouping sensitivity, better for vibe sorting
-         * Smaller hash (e.g. 8) = faster, but may miss nuanced similarity or group loosely
-* **SIMILARITY\_THRESHOLD**:
-   * **What it does:** Maximum allowed Hamming distance between hashes for files to be considered similar
-   * Since hash size can vary, think of this as a **percentage of total hash bits**:
-      * **Strict (0–2%)** → catches exact duplicates or near-identical encodes
-      * **Moderate (3–7%)** → captures edited versions, recuts, color/brightness changes
-      * **Loose (8–12%+)** → ideal for vibe grouping — same setting, outfit, or aesthetic
-    * **Similarity % ≈ (SIMILARITY_THRESHOLD / HASH_SIZE²) × 100**
-      * Example:
-        - `HASH_SIZE = 32` → 32² = 1024 bits
-        - `SIMILARITY_THRESHOLD = 75`
-        - `75 / 1024 × 100 ≈ 7.3%`
-      > Think of this as a vibe sensitivity dial — turn it up to group by feel, down to group by pixel-level sameness
+**MAX\_WORKERS**
+ * **What it does:** Number of parallel processes used for hashing (default: up to 10 or CPU core count).
+ * **Impact:**
+    * More workers = faster runtime (up to your core limit)
+    * Too many workers on low-memory systems may trigger swapping or slowdowns
+    * More workers may result in missing cross-batch similarities
+
+**CHUNK\_COEF**:
+ * **What it does:** Controls the number of files each worker gets (i.e. chunk size).
+ * **Computed as:** `chunk_size = total_files // (MAX_WORKERS * CHUNK_COEF)`
+ * **Impact:**
+    * Lower value (e.g. 1–2) → larger batches → better global comparison but higher memory usage
+    * Higher value (e.g. 4–10) → smaller batches → lower memory and faster per-batch processing, but may miss cross-batch similarities
+
+**MODE**:
+ * `image`: Computes a single hash per file.
+ * `video`: Extracts multiple frames per video and hashes them (slower, but much more accurate) 
+
+**FRAMES\_TO\_SAMPLE**:
+ * **What it does:** Number of frames to extract and hash per video file
+ * **Impact:**
+    * Higher values (e.g. 60–90) = better coverage across time → better vibe detection, scene-level similarity
+    * Lower values (e.g. 10–20) = faster, less precise
+    * > For highly dynamic or longer videos, increase this to avoid missing variations
+
+**HASH\_SIZE**:
+ * **What it does:** Size of the perceptual hash matrix (e.g. 8×8, 16×16, 32×32)
+    * **Impact:**
+       * Larger hash (e.g. 32) = more detail, higher grouping sensitivity, better for vibe sorting
+       * Smaller hash (e.g. 8) = faster, but may miss nuanced similarity or group loosely
+
+**SIMILARITY\_THRESHOLD**:
+ * **What it does:** Maximum allowed Hamming distance between hashes for files to be considered similar
+ * Since hash size can vary, think of this as a **percentage of total hash bits**:
+    * **Strict (0–2%)** → catches exact duplicates or near-identical encodes
+    * **Moderate (3–7%)** → captures edited versions, recuts, color/brightness changes
+    * **Loose (8–12%+)** → ideal for vibe grouping — same setting, outfit, or aesthetic
+  * **Similarity % ≈ (SIMILARITY_THRESHOLD / HASH_SIZE²) × 100**
+    * Example:
+      - `HASH_SIZE = 32` → 32² = 1024 bits
+      - `SIMILARITY_THRESHOLD = 75`
+      - `75 / 1024 × 100 ≈ 7.3%`
+    > Think of this as a vibe sensitivity dial — turn it up to group by feel, down to group by pixel-level sameness
+
 ---
 
 ## Installation
