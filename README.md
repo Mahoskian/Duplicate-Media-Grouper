@@ -25,6 +25,8 @@ Each variant follows the same interface and workflow—choose the one that best 
 
 This tool scans an `input/` directory, computes perceptual hashes for images or video frames, groups similar files by Hamming distance, and moves each group into its own folder under `output/`.
 
+> **Note:** On each script run, any files previously grouped in `output/` will be moved back into `input/` to prevent accidental data loss and ensure a consistent reprocessing loop.
+
 ## Script Variants
 
 ### dHash (Difference Hash)
@@ -63,14 +65,16 @@ This tool scans an `input/` directory, computes perceptual hashes for images or 
 
 ## Installation
 
-1. Create A Virtual Enviroment
+1. **Create a Virtual Environment:**
    python3.11 -m venv venv
+
+2. **Enter the Virtual Enviroment:**
    source venv/bin/activate   # Linux/macOS
 
-2. Install dependencies:
+3. **Install Dependencies:**
    pip install -r requirements.txt
 
-3. Make the launcher executable:
+4. **Make the launcher executable (Linux/macOS only):**
    chmod +x run.sh
 
 ---
@@ -87,12 +91,12 @@ Use the `run.sh` launcher to run any of the three hashing scripts or reset the w
 * `phash`   : Perceptual hash (DCT-based, robust to transforms)
 * `whash`   : Wavelet hash (texture/edge-sensitive)
 * `reset`   : Move files from `output/` back into `input/`
-* `help`    : Show this help message
+* `help`    : Show this help message (default)
 
 ### Media Types
 
-* `image` : Process still images
-* `video` : Sample frames from videos
+* `image` : Process still images ('.jpg', '.jpeg', '.png', '.bmp', '.tiff', '.webp')
+* `video` : Sample frames from videos ('.mp4', '.avi', '.mov', '.mkv', '.m4v')
 
 ### Override Defaults with `KEY=VALUE`
 
@@ -103,19 +107,19 @@ Use the `run.sh` launcher to run any of the three hashing scripts or reset the w
 * `S_THRESH=#`     : Similarity threshold (↑ grouping len, ↓ precision)
 * `D_RUN=true`     : Dry-run: simulate moves without executing
 
-#### Examples
+### Examples
 
-# Run pHash on images using 4 workers and a stricter threshold
+#### Run pHash on images using 4 workers and a stricter threshold
 ./run.sh phash image M_WORKERS=4 S_THRESH=8
 
-# Sample 30 frames for video dHash, no actual moves (dry run)
+#### Sample 30 frames for video dHash, no actual moves (dry run)
 ./run.sh dhash video S_FRAMES=30 D_RUN=true
 
-# Reset workspace
+#### Reset workspace
 ./run.sh reset
 
 ---
 
 ## License
 
-This project is licensed under the MIT License. See `LICENSE` for details.
+This project is licensed under the MIT License. See [LICENSE](LICENSE) for details.
