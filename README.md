@@ -21,7 +21,8 @@ Each variant follows the same interface and workflow—choose the one that best 
 3. [Configuration](#configuration-highlights)
 4. [Installation](#installation)
 5. [Usage](#usage)
-6. [License](#license)
+6. [Next Steps](#license)
+7. [License](#license)
 
 ---
 
@@ -169,6 +170,12 @@ Use the `run.sh` launcher to run any of the three hashing scripts or reset the w
   `./run.sh dhash video S_FRAMES=30 D_RUN=true`
 * #### Reset workspace
   `./run.sh reset`
+
+---
+
+## Next Steps
+
+Planned Project Dev Steps. See [nextsteps]()
 
 ---
 
