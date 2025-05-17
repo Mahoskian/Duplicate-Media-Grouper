@@ -100,7 +100,11 @@ Each configuration option balances speed, accuracy, and perceptual sensitivity. 
       * **Moderate (3–7%)** → captures edited versions, recuts, color/brightness changes
       * **Loose (8–12%+)** → ideal for vibe grouping — same setting, outfit, or aesthetic
       * > Think of this as a vibe sensitivity dial — turn it up to group by feel, down to group by pixel-level sameness
-        > To estimate the percentage: \[\text{Similarity %} = \frac{SIMILARITY\_THRESHOLD}{HASH\_SIZE^2} \times 100\]
+        
+To estimate the percentage:
+\[
+\text{Similarity %} = \frac{SIMILARITY\_THRESHOLD}{HASH\_SIZE^2} \times 100
+\]
 ---
 
 ## Installation
