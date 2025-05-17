@@ -1,10 +1,14 @@
-# Media Duplicate Finder
+# MediaHashCluster
 
-This collection of Python scripts helps you find and group **duplicate or near‑duplicate** images and videos by comparing their visual content rather than file names or binary hashes. Three variants of perceptual hashing are provided:
+**MediaHashCluster** is a powerful perceptual hashing toolset for identifying and grouping visually similar media — including **duplicate**, **near-duplicate**, or even **vibe-aligned** images and videos.
 
-* **dHash** (Difference Hash)
-* **pHash** (Perceptual Hash using DCT)
-* **wHash** (Wavelet Hash)
+Instead of relying on filenames or exact file hashes, this tool analyzes visual content using perceptual hashing to detect similarity based on structure, color, texture, and composition.
+
+Three hash strategies are provided, each optimized for different types of similarity:
+
+- **dHash** — Fast and lightweight; great for detecting nearly identical files
+- **pHash** — DCT-based; ideal for grouping by overall visual content or “vibe”
+- **wHash** — Wavelet-based; more sensitive to texture and detail changes
 
 Each variant follows the same interface and workflow—choose the one that best fits your data and performance needs.
 
@@ -23,9 +27,13 @@ Each variant follows the same interface and workflow—choose the one that best 
 
 ## Overview
 
-This tool scans an `input/` directory, computes perceptual hashes for images or video frames, groups similar files by Hamming distance, and moves each group into its own folder under `output/`.
+- Scans your `input/` folder for images or videos
+- Computes perceptual hashes for each file (or video frame sample)
+- Compares files using Hamming distance
+- Groups similar media into folders in `output/`
+   - **Note:** Resets grouped files to `input/` on each run to ensure clean, repeatable processing that avoids any potential loss in data.
 
-> **Note:** On each script run, any files previously grouped in `output/` will be moved back into `input/` to prevent accidental data loss and ensure a consistent reprocessing loop.
+> Whether you're de-duplicating your media dataset or curating by "similiar-style", **MediaHashCluster** helps you organize large volumes of visual media with perceptual intelligence.
 
 > **OS Compatibility:** This repo is currently configured for Linux. It can also run on macOS or Windows, but may require additional setup by the user.
 
@@ -58,27 +66,67 @@ This tool scans an `input/` directory, computes perceptual hashes for images or 
 
 ## Configuration Highlights
 
-* **MAX\_WORKERS**: number of parallel hashing processes (default: CPU cores up to 10).
-* **CHUNK\_COEF**: controls batch size per worker; lower values → larger chunks (less overhead), higher values → smaller chunks (better load balancing).
-* **MODE**: `image` or `video`.
-* **FRAMES\_TO\_SAMPLE**: number of frames per video to hash (default: 20).
-* **HASH\_SIZE**: dimension of the hash algorithm (e.g. 8 for dHash/wHash, 16 for pHash).
-* **SIMILARITY\_THRESHOLD**: maximum Hamming distance for grouping (tune based on hash length).
+Each configuration option balances speed, accuracy, and perceptual sensitivity. Adjust these based on whether you're targeting exact duplicates, light edits, or vibe-level similarity.
+
+### MAX\_WORKERS
+ * **What it does:** Number of parallel processes used for hashing `default: cpu_count() - 2`
+ * **Impact:**
+    * More workers = faster runtime (up to your core limit)
+    * Too many workers on low-memory systems may trigger swapping or slowdowns
+    * `More workers mean more batches, but grouping only occurs within batches — cross-batch matchings will be missed.`
+
+### CHUNK\_COEF
+ * **What it does:** Controls the number of files each worker gets (i.e. chunk size).
+ * **Computed as:** `chunk_size = total_files // (MAX_WORKERS * CHUNK_COEF)`
+ * **Impact:**
+    * Lower value (e.g. 1–2) → larger batches → better global comparison but higher memory usage → lower CPU overhead (less task dispatching) 
+    * Higher value (e.g. 4–10) → smaller batches → lower memory and faster per-batch processing → higher CPU overhead (more task dispatching) 
+    * `Higher value mean more batches, but grouping only occurs within batches — cross-batch matchings will be missed.`
+
+### MODE
+ * `image`: Computes a single hash per file (fast).
+ * `video`: Extracts multiple frames per video and hashes them (slower, but much more accurate) 
+
+### FRAMES\_TO\_SAMPLE
+ * **What it does:** Number of frames to extract and hash per video file
+ * **Impact:**
+    * Higher values (e.g. 60–90) = slower, better coverage across time → better vibe detection, scene-level similarity
+    * Lower values (e.g. 10–20) = faster, less precise
+    * `For highly dynamic or longer videos, increase this to avoid missing variations`
+
+### HASH\_SIZE
+ * **What it does:** Size of the perceptual hash matrix (e.g. 8×8, 16×16, 32×32)
+ * **Impact:**
+    * Larger hash (e.g. 32) = slower, more detail, higher grouping sensitivity, better for vibe sorting
+    * Smaller hash (e.g. 8) = faster, but may miss nuanced similarity or group loosely
+
+### SIMILARITY\_THRESHOLD
+ * **What it does:** Maximum allowed Hamming distance between hashes for files to be considered similar
+ * Since hash size can vary, think of this as a **percentage of total hash bits**:
+    * **Strict (0–2%)** → catches exact duplicates or near-identical encodes
+    * **Moderate (3–7%)** → captures edited versions, recuts, color/brightness changes
+    * **Loose (8–12%+)** → ideal for vibe grouping — same setting or aesthetic
+  * **Similarity % ≈ (SIMILARITY_THRESHOLD / HASH_SIZE²) × 100**
+    * Example:
+      - `HASH_SIZE = 32 → 32² = 1024 bits`
+      - `SIMILARITY_THRESHOLD = 75`
+      - `75 / 1024 × 100 ≈ 7.3%`
+> Think of this as a vibe sensitivity dial — turn it up to group by feel, down to group by pixel-level sameness
 
 ---
 
-## Installation
+## Installation (Linux Only)
 
 1. #### Create a Virtual Environment:
    `python3.11 -m venv venv`
 
 3. #### Enter the Virtual Enviroment:
-   `source venv/bin/activate   # Linux`
+   `source venv/bin/activate`
 
 5. #### Install Dependencies:
    `pip install -r requirements.txt`
 
-7. #### Make the launcher executable (Linux only):
+7. #### Make the launcher executable
    `chmod +x run.sh`
 
 ---
