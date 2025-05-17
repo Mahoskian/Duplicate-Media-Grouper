@@ -63,23 +63,15 @@ This tool scans an `input/` directory, computes perceptual hashes for images or 
 
 ## Installation
 
-1. Create a## License
-
-This project is licensed under the MIT License. See `LICENSE` for details.
-
+1. Create A Virtual Enviroment
    python3.11 -m venv venv
    source venv/bin/activate   # Linux/macOS
-   ```
+
 2. Install dependencies:
-
-   ```bash
    pip install -r requirements.txt
-   ```
-3. Make the launcher executable:
 
-   ```bash
+3. Make the launcher executable:
    chmod +x run.sh
-   ```
 
 ---
 
@@ -87,9 +79,7 @@ This project is licensed under the MIT License. See `LICENSE` for details.
 
 Use the `run.sh` launcher to run any of the three hashing scripts or reset the workspace.
 
-```bash
 ./run.sh [dhash|phash|whash|reset|help] [image|video] [KEY=VALUE]...
-```
 
 ### Modes
 
@@ -115,7 +105,6 @@ Use the `run.sh` launcher to run any of the three hashing scripts or reset the w
 
 #### Examples
 
-```bash
 # Run pHash on images using 4 workers and a stricter threshold
 ./run.sh phash image M_WORKERS=4 S_THRESH=8
 
@@ -124,7 +113,6 @@ Use the `run.sh` launcher to run any of the three hashing scripts or reset the w
 
 # Reset workspace
 ./run.sh reset
-```
 
 ---
 
