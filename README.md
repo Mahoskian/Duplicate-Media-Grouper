@@ -36,8 +36,6 @@ Each variant follows the same interface and workflow—choose the one that best 
 
 > Whether you're de-duplicating your media dataset or curating by "similiar-style", **MediaHashCluster** helps you organize large volumes of visual media with perceptual intelligence.
 
-> **OS Compatibility:** This repo is currently configured for Linux. It can also run on macOS or Windows, but may require additional setup by the user.
-
 ### How MediaHashCluster Works (Simplified Conceptual Overview)
 1. Input Collection:
    - You provide a folder of media files — either images or videos.
@@ -150,15 +148,17 @@ Each configuration option balances speed, accuracy, and perceptual sensitivity. 
 ## Installation (Linux Only)
 
 1. #### Create a Virtual Environment:
-   `python3.11 -m venv venv`
+   `python3.11 -m venv venv` # Linux/MacOS/Windows
 
 3. #### Enter the Virtual Enviroment:
-   `source venv/bin/activate`
+   `source venv/bin/activate`  # Linux & MacOS
+   `venv\Scripts\activate.bat` # Windows CMD
+   `venv\Scripts\Activate.ps1` # Windows PowerShell
 
 5. #### Install Dependencies:
    `pip install -r requirements.txt`
 
-7. #### Make the launcher executable
+7. #### Make the launcher executable (Linux & MacOS ONLY)
    `chmod +x run.sh`
 
 ---
