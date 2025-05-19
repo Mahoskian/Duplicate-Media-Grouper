@@ -145,7 +145,7 @@ Each configuration option balances speed, accuracy, and perceptual sensitivity. 
 
 ---
 
-## Installation (Linux Only)
+## Installation
 
 1. #### Create a Virtual Environment:
    `python3.11 -m venv venv` # Linux/MacOS/Windows
