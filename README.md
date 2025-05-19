@@ -38,6 +38,38 @@ Each variant follows the same interface and workflow—choose the one that best 
 
 > **OS Compatibility:** This repo is currently configured for Linux. It can also run on macOS or Windows, but may require additional setup by the user.
 
+### How MediaHashCluster Works (Simplified Conceptual Overview)
+1. Input Collection:
+   - You provide a folder of media files — either images or videos.
+2. Video Frame Sampling (if videos):
+   - Each video is sampled into a number of equally spaced frames.
+   - These frames are treated like images — each one will be hashed individually.
+3. Perceptual Hashing:
+   - Each image (or video frame) is passed through one of three perceptual hash algorithms:
+      - dHash: Compares adjacent pixels; fast and best for near-identical duplicates.
+      - pHash: Uses DCT (Discrete Cosine Transform); captures global structure, good for “vibe” similarity.
+      - wHash: Uses wavelets; better at catching texture and edge differences.
+    - The result is a binary hash — e.g., 10010101... — which is essentially a compressed n-dimensional vector that captures visual structure.
+4. Video Hash Aggregation:
+    - For videos, all the frame hashes are averaged (or combined) to get a single hash that represents the whole video.
+5. Distance Comparison:
+    - Hashes are compared using Hamming Distance — how many bits differ between two hashes.
+    - If the number of differing bits is below a user-defined similarity threshold, the two media files are considered visually similar.
+6. Clustering:
+    - This similarity is used to group files together:
+       - Simple threshold-based grouping: if two hashes are close enough, they're grouped.
+       - Optionally, more complex clustering (like HDBSCAN) can be used to:
+          - Detect denser regions of similar media.
+          - Leave outliers ungrouped.
+          - Avoid setting hard thresholds.
+7. Visualization Perspective (Optional):
+    - You can imagine each hash as a point in n-dimensional space.
+    - Media files with similar content are closer together.
+    - Clustering is like identifying dense clouds of points or connected regions in that space.
+
+**TL;DR Summary:**
+You hash media into high-dimensional binary vectors that reflect visual characteristics. Then, you compare those vectors using Hamming distance to determine similarity. Finally, you group or cluster the media files based on this similarity — either using thresholds or smarter density-based methods — to organize duplicates, near-duplicates, or “vibe-aligned” content.
+
 ---
 
 ## Script Variants
