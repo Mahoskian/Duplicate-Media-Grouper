@@ -54,7 +54,6 @@ Each variant follows the same interface and workflow—choose the one that best 
     - For videos, all the frame hashes are averaged (or combined) to get a single hash that represents the whole video.
 5. Distance Comparison:
     - Hashes are compared using Hamming Distance — how many bits differ between two hashes.
-    - If the number of differing bits is below a user-defined similarity threshold, the two media files are considered visually similar.
 6. Clustering:
     - This similarity is used to group files together:
        - Simple threshold-based grouping: if two hashes are close enough, they're grouped.
