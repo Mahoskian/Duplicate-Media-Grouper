@@ -152,8 +152,8 @@ Each configuration option balances speed, accuracy, and perceptual sensitivity. 
 
 3. #### Enter the Virtual Enviroment:
    `source venv/bin/activate`  # Linux & MacOS
-   `venv\Scripts\activate.bat` # Windows CMD
-   `venv\Scripts\Activate.ps1` # Windows PowerShell
+   
+   `venv\Scripts\activate.bat` / `venv\Scripts\Activate.ps1` # Windows CMD / PowerShell
 
 5. #### Install Dependencies:
    `pip install -r requirements.txt`
