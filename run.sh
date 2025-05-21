@@ -1,7 +1,5 @@
 #!/usr/bin/env bash
-
 # Launcher for core.py with KEY=VALUE overrides
-
 # Default input and output directories
 INPUT_DIR="input"
 OUTPUT_DIR="output"
@@ -77,7 +75,7 @@ if [ ! -d "$INPUT_DIR" ]; then
 fi
 
 # Build the command
-CMD=(python core.py
+CMD=(python scripts/mediahash.py
      --hash-type "$HASH_TYPE"
      --mode "$MEDIA"
      --input "$INPUT_DIR"
