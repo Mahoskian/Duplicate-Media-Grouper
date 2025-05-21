@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# Launcher for dHash/pHash/wHash with KEY=VALUE overrides
+# Launcher for core.py with KEY=VALUE overrides
 
 # Default input and output directories
 INPUT_DIR="input"
@@ -18,81 +18,81 @@ Modes:
   reset               Move files from output/ back into input/
   help                Show this help message
 
-Override these Python defaults:
-  M_WORKERS=#         (Max Workers): # of CPUs (↑ speed, ↓ overhead)
-  C_CHUNK=#           (Coefficient Chunk): # File(s)/Worker (↑ batches, ↑ precision, ↓ speed; ↓ batches, ↓ precision, ↑ speed)
-  S_FRAMES=#          (Frame Samples): Extracted Frames/video (↑ precision, ↓ speed)
-  S_HASH=#            (Hash Size): Granularity of Hash (↑ detail, ↓ speed)
-  S_THRESH=#          (Similarity Threshold): max distance of groupings (↑ grouping len, ↓ precision)
-  D_RUN=true          simulate moves without executing
+Override these Python defaults (flags):
+  M_WORKERS=#         → --workers
+  C_CHUNK=#           → --chunk-coef
+  S_FRAMES=#          → --frames-to-sample
+  S_HASH=#            → --hash-size
+  S_THRESH=#          → --threshold
+  D_RUN=true          → --dry-run
+  (plus --graph if you add that feature)
 EOF
 }
 
-# Show help if no args or 'help'
+# No args or help
 if [ "$#" -eq 0 ] || [ "$1" = "help" ]; then
-    print_help
-    exit 0
+    print_help; exit 0
 fi
 
-# Handle 'reset' mode: move files back to input_folder and clean up
+# Reset workspace?
 reset_output() {
     if [ -d "$OUTPUT_DIR" ]; then
-        echo "Resetting workspace: moving files back to $INPUT_DIR/"
+        echo "Resetting: moving files back to $INPUT_DIR/"
         find "$OUTPUT_DIR" -type f -exec mv -t "$INPUT_DIR" {} +
         rm -rf "$OUTPUT_DIR"
     else
-        echo "Nothing to reset. $OUTPUT_DIR does not exist."
+        echo "Nothing to reset; $OUTPUT_DIR not found."
     fi
     exit 0
 }
-
 if [ "$1" = "reset" ]; then
     reset_output
 fi
 
-# Validate mode and media type arguments
-MODE="$1"; MEDIA="$2"; shift 2
-if [[ ! "$MODE" =~ ^(dhash|phash|whash)$ ]]; then
-    echo "Error: mode must be dhash, phash, or whash"; print_help; exit 1
+# Grab hash-type and media arguments
+HASH_TYPE="$1"; MEDIA="$2"; shift 2
+if [[ ! "$HASH_TYPE" =~ ^(dhash|phash|whash)$ ]]; then
+    echo "Error: first arg must be dhash, phash, or whash"; print_help; exit 1
 fi
 if [[ ! "$MEDIA" =~ ^(image|video)$ ]]; then
-    echo "Error: media type must be image or video"; print_help; exit 1
+    echo "Error: second arg must be image or video"; print_help; exit 1
 fi
 
 # Parse KEY=VALUE overrides
 for kv in "$@"; do
     case "$kv" in
-        M_WORKERS=*)            WORKERS="${kv#*=}" ;; 
-        C_CHUNK=*)              CHUNK_COEF="${kv#*=}" ;; 
-        S_FRAMES=*)             FRAMES="${kv#*=}" ;; 
-        S_HASH=*)               HASH_SIZE="${kv#*=}" ;; 
-        S_THRESH=*)             THRESHOLD="${kv#*=}" ;; 
-        D_RUN=*)                DRY_RUN="${kv#*=}" ;; 
-        *) echo "Unknown override: $kv"; print_help; exit 1 ;; 
+        M_WORKERS=*)    WORKERS="${kv#*=}" ;;
+        C_CHUNK=*)      CHUNK_COEF="${kv#*=}" ;;
+        S_FRAMES=*)     FRAMES="${kv#*=}" ;;
+        S_HASH=*)       HASH_SIZE="${kv#*=}" ;;
+        S_THRESH=*)     THRESHOLD="${kv#*=}" ;;
+        D_RUN=*)        DRY_RUN="${kv#*=}" ;;
+        *) echo "Unknown override: $kv"; print_help; exit 1 ;;
     esac
 done
 
-# Select the proper Python script based on mode
-case "$MODE" in
-    dhash) SCRIPT="D_HASH.py" ;; 
-    phash) SCRIPT="P_HASH.py" ;; 
-    whash) SCRIPT="W_HASH.py" ;; 
-esac
-
-# Check existence of input directory
+# Ensure input exists
 if [ ! -d "$INPUT_DIR" ]; then
     echo "Error: input directory '$INPUT_DIR' not found."; exit 1
 fi
 
-# Build the command with provided overrides
-CMD=(python "$SCRIPT" --mode "$MEDIA")
-[ -n "$WORKERS" ]    && CMD+=(--workers "$WORKERS")
-[ -n "$CHUNK_COEF" ] && CMD+=(--chunk-coef "$CHUNK_COEF")
-[ -n "$FRAMES" ]     && CMD+=(--frames-to-sample "$FRAMES")
-[ -n "$HASH_SIZE" ]  && CMD+=(--hash-size "$HASH_SIZE")
-[ -n "$THRESHOLD" ]  && CMD+=(--threshold "$THRESHOLD")
+# Build the command
+CMD=(python core.py
+     --hash-type "$HASH_TYPE"
+     --mode "$MEDIA"
+     --input "$INPUT_DIR"
+     --output "$OUTPUT_DIR"
+)
+
+[ -n "$WORKERS"    ] && CMD+=(--workers       "$WORKERS")
+[ -n "$CHUNK_COEF" ] && CMD+=(--chunk-coef    "$CHUNK_COEF")
+[ -n "$FRAMES"     ] && CMD+=(--frames-to-sample "$FRAMES")
+[ -n "$HASH_SIZE"  ] && CMD+=(--hash-size     "$HASH_SIZE")
+[ -n "$THRESHOLD"  ] && CMD+=(--threshold     "$THRESHOLD")
 [ "$DRY_RUN" = "true" ] && CMD+=(--dry-run)
 
-# Run the final command
+# (If you've implemented --graph:)
+#[ "$GRAPH" = "true" ] && CMD+=(--graph)
+
 echo "Executing: ${CMD[*]}"
 "${CMD[@]}"
