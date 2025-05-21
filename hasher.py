@@ -6,7 +6,7 @@ from PIL import Image
 import imagehash
 
 def dhash_compute(image_gray: np.ndarray, hash_size: int) -> np.ndarray:
-    """Difference hash on a grayscale array."""
+    # Difference hash on a grayscale array.
     resized = cv2.resize(
         image_gray, (hash_size + 1, hash_size),
         interpolation=cv2.INTER_AREA
@@ -15,7 +15,7 @@ def dhash_compute(image_gray: np.ndarray, hash_size: int) -> np.ndarray:
     return diff.ravel().astype(np.uint8)
 
 def phash_compute(image_gray: np.ndarray, hash_size: int) -> np.ndarray:
-    """Perceptual (DCT) hash on a grayscale or RGB array."""
+    # Perceptual (DCT) hash on a grayscale or RGB array.
     if image_gray.ndim == 3:
         img = Image.fromarray(cv2.cvtColor(image_gray, cv2.COLOR_BGR2RGB))
     else:
@@ -24,7 +24,7 @@ def phash_compute(image_gray: np.ndarray, hash_size: int) -> np.ndarray:
     return ph.hash.flatten().astype(np.uint8)
 
 def whash_compute(image_gray: np.ndarray, hash_size: int) -> np.ndarray:
-    """Wavelet hash on a grayscale or RGB array."""
+    # Wavelet hash on a grayscale or RGB array.
     if image_gray.ndim == 3:
         img = Image.fromarray(cv2.cvtColor(image_gray, cv2.COLOR_BGR2RGB))
     else:

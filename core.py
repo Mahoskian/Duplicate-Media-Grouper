@@ -161,7 +161,7 @@ def save_groups(groups, input_dir, output_dir, dry_run):
 
 
 def worker(task):
-    """Top-level worker for multiprocessing pickling."""
+    # Top-level worker for multiprocessing pickling.
     name, inp, mode, sz, fr = task
     if mode == 'image':
         return hash_image(name, inp, sz)
@@ -216,7 +216,7 @@ def main():
     valid = [r for r in results if r]
     groups = cluster_hashes(valid, thresh)
 
-    # Optional graphing here
+    # Graphing here
 
     save_groups(groups, args.input_dir, args.output_dir, args.dry_run)
 
